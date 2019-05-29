@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXTreeTableView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="850.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LaporanController">
+   <children>
+      <TabPane layoutX="1.0" layoutY="65.0" prefHeight="535.0" prefWidth="850.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+            <Tab text="Daftar Bank Siswa">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <JFXTreeTableView fx:id="TableDaftarSiswa" layoutX="33.0" layoutY="26.0" prefHeight="302.0" prefWidth="716.0" />
+                        <JFXButton buttonType="RAISED" layoutX="703.0" layoutY="354.0" onAction="#cetakActionSiswa" style="-fx-background-color: #16c1dd;" text="Cetak" textFill="WHITE" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+          <Tab text="Transaksi Siswa">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <JFXDatePicker fx:id="sampaitanggalDate" layoutX="528.0" layoutY="126.0" />
+                        <Label layoutX="31.0" layoutY="131.0" prefWidth="68.0" text="Dari Tanggal" />
+                        <Label layoutX="207.0" layoutY="31.0" text="Nomor Rekening" />
+                        <JFXTreeTableView fx:id="TableLaporan" layoutX="65.0" layoutY="169.0" prefHeight="295.0" prefWidth="705.0" />
+                        <JFXTextField fx:id="norekTextField" layoutX="326.0" layoutY="19.0" />
+                        <JFXButton buttonType="RAISED" layoutX="724.0" layoutY="473.0" onAction="#cetakAction" style="-fx-background-color: #16c1dd;" text="Cetak" textFill="WHITE" />
+                        <JFXButton buttonType="RAISED" layoutX="719.0" layoutY="128.0" onAction="#prosesAction" style="-fx-background-color: #16c1dd;" text="Proses" textFill="WHITE" />
+                        <JFXDatePicker fx:id="daritanggalDate" layoutX="110.0" layoutY="125.0" />
+                        <Label layoutX="411.0" layoutY="131.0" text="Sampai Tanggal" />
+                        <JFXComboBox fx:id="jenisComboBox" layoutX="326.0" layoutY="77.0" prefHeight="25.0" prefWidth="135.0" />
+                        <Label layoutX="220.0" layoutY="81.0" text="Jenis Transaksi" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Transaksi Bank">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <JFXDatePicker fx:id="sampaitanggalDateBank" layoutX="533.0" layoutY="116.0" />
+                        <Label layoutX="50.0" layoutY="121.0" prefWidth="68.0" text="Dari Tanggal" />
+                        <JFXTreeTableView fx:id="TableLaporanBank" layoutX="68.0" layoutY="157.0" prefHeight="295.0" prefWidth="705.0" />
+                        <JFXButton buttonType="RAISED" layoutX="735.0" layoutY="461.0" onAction="#cetakActionBank" style="-fx-background-color: #16c1dd;" text="Cetak" textFill="WHITE" />
+                        <JFXButton buttonType="RAISED" layoutX="722.0" layoutY="120.0" onAction="#prosesActionBank" style="-fx-background-color: #16c1dd;" text="Proses" textFill="WHITE" />
+                        <JFXDatePicker fx:id="daritanggalDateBank" layoutX="131.0" layoutY="116.0" />
+                        <Label layoutX="425.0" layoutY="123.0" text="Sampai Tanggal" />
+                        <JFXComboBox fx:id="jenisComboBoxBank" layoutX="373.0" layoutY="19.0" prefHeight="25.0" prefWidth="135.0" />
+                        <Label layoutX="227.0" layoutY="33.0" text="Jenis Laporan Transaksi" />
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+            <Tab text="Keuangan Bank">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <JFXTreeTableView fx:id="Tablekeuangan" layoutX="32.0" layoutY="88.0" prefHeight="360.0" prefWidth="743.0" />
+                        <JFXDatePicker fx:id="DariTanggalDateKeuangan" layoutX="100.0" layoutY="41.0" />
+                        <JFXDatePicker fx:id="SampaiTanggalDateKeuangan" layoutX="475.0" layoutY="41.0" />
+                        <JFXButton buttonType="RAISED" layoutX="724.0" layoutY="42.0" onAction="#prosesActionKeuangan" style="-fx-background-color: #16c1dd;" text="Proses" textFill="WHITE" />
+                        <JFXButton buttonType="RAISED" layoutX="729.0" layoutY="467.0" onAction="#cetakActionKeuangan" style="-fx-background-color: #16c1dd;" text="Cetak" textFill="WHITE" />
+                        <Label layoutX="32.0" layoutY="46.0" prefWidth="68.0" text="Dari Tanggal" />
+                        <Label layoutX="390.0" layoutY="46.0" text="Sampai Tanggal" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="Pembayaran">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <JFXTreeTableView fx:id="Tablepembayaran" layoutX="41.0" layoutY="108.0" prefHeight="336.0" prefWidth="740.0" />
+                        <JFXDatePicker fx:id="DariTanggalDatePembayaran" layoutX="114.0" layoutY="61.0" />
+                        <JFXDatePicker fx:id="SampaiTanggalDatePembayaran" layoutX="459.0" layoutY="61.0" />
+                        <JFXButton buttonType="RAISED" layoutX="733.0" layoutY="62.0" onAction="#prosesActionPembayaran" style="-fx-background-color: #16c1dd;" text="Proses" textFill="WHITE" />
+                        <JFXButton buttonType="RAISED" layoutX="735.0" layoutY="454.0" onAction="#cetakActionPembayaran" style="-fx-background-color: #16c1dd;" text="Cetak" textFill="WHITE" />
+                        <Label layoutX="41.0" layoutY="66.0" prefWidth="68.0" text="Dari Tanggal" />
+                        <Label layoutX="369.0" layoutY="66.0" text="Sampai Tanggal" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+      <Label layoutX="7.0" layoutY="-5.0" text="Laporan" textFill="#16c1dd">
+         <font>
+            <Font name="Lobster" size="48.0" />
+         </font>
+      </Label>
+   </children>
+   <effect>
+      <DropShadow />
+   </effect>
+</Pane>

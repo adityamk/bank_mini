@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXTreeTableView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="850.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.NasabahController">
+   <children>
+      <HBox layoutX="10.0" layoutY="10.0" prefHeight="488.0" prefWidth="832.0">
+         <children>
+            <VBox prefHeight="488.0" prefWidth="187.0">
+               <children>
+                  <HBox prefHeight="73.0" prefWidth="187.0">
+                     <children>
+                        <Label text="Nasabah" textFill="#16c1dd">
+                           <font>
+                              <Font name="Lobster" size="48.0" />
+                           </font>
+                        </Label>
+                     </children></HBox>
+                  <HBox prefHeight="44.0" prefWidth="187.0">
+                     <children>
+                        <JFXTextField fx:id="nisTextField" focusColor="#16c1dd" labelFloat="true" promptText="NIS" />
+                     </children>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="83.0" prefHeight="44.0" prefWidth="187.0">
+                     <children>
+                        <JFXTextField fx:id="namaTextField" focusColor="#16c1dd" labelFloat="true" promptText="Nama" />
+                     </children>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="127.0" prefHeight="44.0" prefWidth="187.0">
+                     <children>
+                        <JFXTextField fx:id="kelasTextField" focusColor="#16c1dd" labelFloat="true" promptText="Kelas" />
+                     </children>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="127.0" prefHeight="44.0" prefWidth="187.0">
+                     <children>
+                        <JFXTextField fx:id="no_telpTextField" focusColor="#16c1dd" labelFloat="true" promptText="No Telp" />
+                     </children>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="171.0" prefHeight="44.0" prefWidth="187.0">
+                     <children>
+                        <JFXTextField fx:id="alamatTextField" focusColor="#16c1dd" labelFloat="true" promptText="Alamat" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <JFXTreeTableView fx:id="TableNasabah" onMousePressed="#pilihHandle" prefHeight="488.0" prefWidth="642.0" styleClass="tree-table-cell" stylesheets="@../Asset/bgGambar.css" />
+         </children>
+      </HBox>
+      <HBox layoutX="14.0" layoutY="522.0" prefHeight="64.0" prefWidth="680.0" spacing="20.0">
+         <children>
+            <JFXButton fx:id="simpanButton" onAction="#simpanHandle" style="-fx-background-color: #16c1dd;" text="Simpan" textFill="WHITE" />
+            <JFXButton fx:id="batalButton" onAction="#batalHandle" style="-fx-background-color: #16c1dd;" text="Batal" textFill="WHITE">
+               <HBox.margin>
+                  <Insets left="30.0" />
+               </HBox.margin>
+            </JFXButton>
+            <JFXButton fx:id="editButton" layoutX="10.0" layoutY="10.0" onAction="#editHandle" style="-fx-background-color: #16c1dd;" text="Edit" textFill="WHITE">
+               <HBox.margin>
+                  <Insets left="220.0" right="50.0" />
+               </HBox.margin>
+            </JFXButton>
+            <JFXButton fx:id="hapusButton" layoutX="66.0" layoutY="10.0" onAction="#hapusHandle" style="-fx-background-color: #16c1dd;" text="Hapus" textFill="WHITE" />
+         </children>
+      </HBox>
+   </children>
+   <effect>
+      <DropShadow />
+   </effect>
+</Pane>

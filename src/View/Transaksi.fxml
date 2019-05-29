@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXTreeTableView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="850.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.TransaksiController">
+   <effect>
+      <DropShadow />
+   </effect>
+   <children>
+      <HBox layoutX="190.0" layoutY="60.0" prefHeight="53.0" prefWidth="354.0" spacing="20.0">
+         <children>
+            <Label text="No Rekening">
+               <HBox.margin>
+                  <Insets top="10.0" />
+               </HBox.margin>
+            </Label>
+            <JFXTextField fx:id="norekTextField" focusColor="#16c1dd" />
+            <JFXButton fx:id="cariButton" onAction="#cariAction" style="-fx-background-color: #16c1dd;" text="Cari" textFill="WHITE" />
+         </children>
+         <padding>
+            <Insets left="70.0" />
+         </padding>
+      </HBox>
+      <AnchorPane layoutX="7.0" layoutY="188.0" prefHeight="412.0" prefWidth="685.0">
+         <children>
+            <TabPane layoutY="3.0" prefHeight="396.0" prefWidth="835.0" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab text="Input Transaksi">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <HBox layoutX="182.0" layoutY="43.0" prefHeight="25.0" prefWidth="320.0" spacing="50.0" AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="70.0">
+                                 <children>
+                                    <Label prefHeight="25.0" prefWidth="150.0" text="Jenis Transaksi">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin></Label>
+                                    <JFXComboBox fx:id="jenisComboBox" prefHeight="25.0" prefWidth="265.0" />
+                                 </children>
+                              </HBox>
+                              <HBox layoutX="182.0" layoutY="92.0" prefHeight="25.0" prefWidth="320.0" spacing="50.0" AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="120.0">
+                                 <children>
+                                    <Label prefHeight="25.0" prefWidth="150.0" text="Jumlah " />
+                                    <JFXTextField fx:id="jumlahTextField" focusColor="#16c1dd" prefColumnCount="20" prefHeight="25.0" prefWidth="264.0" />
+                                 </children>
+                              </HBox>
+                              <HBox layoutX="182.0" layoutY="147.0" prefHeight="25.0" prefWidth="320.0" spacing="50.0" AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="175.0">
+                                 <children>
+                                    <Label prefHeight="25.0" prefWidth="150.0" text="Keterangan" />
+                                    <JFXTextField fx:id="ketTextField" focusColor="#16c1dd" prefColumnCount="20" prefHeight="25.0" prefWidth="264.0" />
+                                 </children>
+                              </HBox>
+                              <HBox layoutX="216.0" layoutY="287.0" prefHeight="37.0" prefWidth="265.0" spacing="100.0">
+                                 <children>
+                                    <JFXButton style="-fx-background-color: #16c1dd;" text="Batal" textFill="WHITE" />
+                                    <JFXButton onAction="#OnAction" style="-fx-background-color: #16c1dd;" text="Proses" textFill="WHITE" />
+                                 </children>
+                              </HBox>
+                              <Label layoutX="14.0" layoutY="14.0" text="Input Transaksi" textFill="#16c1dd">
+                                 <font>
+                                    <Font name="Lobster" size="24.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                </Tab>
+                <Tab text="Daftar Transaksi">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Label layoutX="14.0" layoutY="14.0" text="Daftar Transaksi" textFill="#16c1dd">
+                                 <font>
+                                    <Font name="Lobster" size="24.0" />
+                                 </font>
+                              </Label>
+                              <JFXTreeTableView fx:id="TableTransaksi" layoutX="11.0" layoutY="53.0" prefHeight="308.0" prefWidth="817.0" />
+                           </children>
+                        </AnchorPane>
+                     </content>
+                </Tab>
+              </tabs>
+            </TabPane>
+         </children>
+      </AnchorPane>
+      <Label layoutX="173.0" layoutY="110.0" text="Nama:" />
+      <Label fx:id="namaLabel" layoutX="246.0" layoutY="110.0" prefHeight="17.0" prefWidth="209.0" />
+      <Label layoutX="173.0" layoutY="138.0" text="NIS:" />
+      <Label fx:id="nisLabel" layoutX="246.0" layoutY="138.0" prefHeight="17.0" prefWidth="209.0" />
+      <Label layoutX="14.0" layoutY="14.0" text="Transaksi" textFill="#16c1dd">
+         <font>
+            <Font name="Lobster" size="48.0" />
+         </font>
+      </Label>
+      <Label layoutX="170.0" layoutY="168.0" text="Saldo:" />
+      <Label fx:id="saldoLabel" layoutX="246.0" layoutY="168.0" prefHeight="17.0" prefWidth="209.0" />
+   </children>
+</Pane>

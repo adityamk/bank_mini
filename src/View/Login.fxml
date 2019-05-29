@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="anchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LoginController">
+   <children>
+      <Pane layoutX="5.0" layoutY="6.0" prefHeight="215.0" prefWidth="340.0" style="-fx-background-color: #ffffff;" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="6.0">
+         <children>
+            <ImageView fitHeight="73.0" fitWidth="278.0" layoutX="255.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Asset/logo.PNG" />
+               </image>
+            </ImageView>
+            <Label layoutX="189.0" layoutY="100.0" prefHeight="25.0" prefWidth="215.0" text="Bank Mini AL-Hamidiyyah">
+               <font>
+                  <Font name="Comic Sans MS" size="18.0" />
+               </font>
+               <padding>
+                  <Insets top="-25.0" />
+               </padding>
+            </Label>
+            <JFXTextField fx:id="usernameTextField" focusColor="#16c1dd" labelFloat="true" layoutX="169.0" layoutY="170.0" minWidth="-Infinity" opacity="0.5" prefHeight="25.0" prefWidth="256.0" promptText="Username" />
+            <JFXPasswordField fx:id="passwordTextField" focusColor="#16c1dd" labelFloat="true" layoutX="169.0" layoutY="229.0" opacity="0.5" prefHeight="25.0" prefWidth="256.0" promptText="Password" />
+            <HBox fillHeight="false" layoutX="125.0" layoutY="323.0" prefHeight="40.0" prefWidth="341.0">
+               <children>
+                  <JFXButton fx:id="loginButton" buttonType="RAISED" mnemonicParsing="false" onAction="#actionHandle" ripplerFill="WHITE" style="-fx-background-color: #16c1dd;" text="Login" textFill="WHITE">
+                     <HBox.margin>
+                        <Insets left="15.0" right="80.0" top="10.0" />
+                     </HBox.margin>
+                  </JFXButton>
+                  <JFXButton fx:id="settingButton" buttonType="RAISED" onAction="#actionHandle" style="-fx-background-color: #16c1dd;" text="Setting" textFill="WHITE">
+                     <HBox.margin>
+                        <Insets top="10.0" />
+                     </HBox.margin>
+                  </JFXButton>
+                  <JFXButton fx:id="cancelButton" buttonType="RAISED" mnemonicParsing="false" onAction="#actionHandle" ripplerFill="WHITE" style="-fx-background-color: #16c1dd;" text="Cancel" textFill="WHITE">
+                     <HBox.margin>
+                        <Insets left="80.0" top="10.0" />
+                     </HBox.margin>
+                  </JFXButton>
+               </children>
+            </HBox>
+            <FontAwesomeIcon fill="#16c1dd" fontSmoothingType="LCD" iconName="USERS" layoutX="136.0" layoutY="191.0" size="1.5em" />
+            <FontAwesomeIcon fill="#16c1dd" fontSmoothingType="LCD" iconName="LOCK" layoutX="137.0" layoutY="250.0" size="1.5em" />
+         </children>
+         <effect>
+            <DropShadow />
+         </effect>
+      </Pane>
+   </children>
+   <effect>
+      <DropShadow />
+   </effect>
+</AnchorPane>

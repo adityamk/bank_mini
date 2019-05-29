@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="850.0" style="-fx-background-color: #ffffff;" styleClass="bodybgmain" stylesheets="@../Asset/bgGambar.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.BerandaController">
+   <effect>
+      <DropShadow />
+   </effect>
+   <children>
+      <Label layoutX="28.0" layoutY="545.0" text="Total Saldo Bank :">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <Label fx:id="saldoBankLabel" layoutX="172.0" layoutY="546.0" prefHeight="25.0" prefWidth="124.0">
+         <font>
+            <Font size="16.0" />
+         </font></Label>
+      <Label fx:id="tglLabel" layoutX="28.0" layoutY="14.0" />
+      <Label fx:id="jamLabel" layoutX="786.0" layoutY="14.0" />
+   </children>
+
+
+</Pane>

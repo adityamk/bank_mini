@@ -1,0 +1,50 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Feb 1, 2019, 4:43:26 PM
+    Author     : ASUS
+*/
+.bodybg1{
+    -fx-background-image: url('home1.png');
+    -fx-background-size: 100% 100%;
+}
+
+.bodybg2{
+    -fx-background-image: url('transaksi1.png');
+    -fx-background-size: 100% 100%;
+}
+
+.bodybg3{
+    -fx-background-image: url('nasabah1.png');
+    -fx-background-size: 100% 100%;
+}
+
+.bodybg4{
+    -fx-background-image: url('laporan1.png');
+    -fx-background-size: 100% 100%;
+}
+
+.bodybg5{
+    -fx-background-image: url('info1.png');
+    -fx-background-size: 100% 100%;
+}
+
+.bodybg6{
+    -fx-background-image: url('keluar2.png');
+    -fx-background-size: 100% 100%;
+}
+
+.bodybgmain{
+    -fx-background-image: url('Main.png');
+    -fx-background-size: 100% 100%;
+}
+.logook{
+    -fx-background-image: url('logo.PNG');
+    -fx-background-size: 100% 100%;
+}
+.tree-table-cell {
+    -fx-alignment: center;
+}
