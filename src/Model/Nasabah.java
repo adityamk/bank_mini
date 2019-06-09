@@ -31,10 +31,6 @@ private String alamat;
         return nasabahList.stream().filter(nasabah-> nasabah.getNo_rekening()==no_rekening).findFirst().orElse(null);
     }
  
- public static Nasabah nasabah() {
-        return (Nasabah) nasabahList;
-    }
- 
  public static Nasabah nasabah(Transaksi transaksi) {
         return nasabahList.stream().filter(nasabah-> nasabah.getNo_rekening()==transaksi.getNo_rekening()).findFirst().orElse(null);
     }

@@ -89,10 +89,11 @@ public class LaporanPDF {
                 .setFontSize(12)
                 .addCell(cellNoBorder(image.setAutoScale(true)))
                 .addCell(
-                        cellNoBorder("SDIT AL-HAMIDIYYAH\n" + judul)
+                        cellNoBorder("YAYASAN PENDIDIKAN  ISLAM TERPADU AL-HAMIDIYYAH\n Perum Btn Bambu Kuning Blok F Rt.05/13 Bojonggede Bogor 16320 \n Telepon : 087770888679\n \n \n" +judul+ "\n \n")
                                 .setTextAlignment(TextAlignment.CENTER)
                                 .setHorizontalAlignment(HorizontalAlignment.CENTER)
                                 .setVerticalAlignment(VerticalAlignment.MIDDLE));
+                
     }
 
     private static Table signature(LocalDate tgl) {
@@ -105,7 +106,7 @@ public class LaporanPDF {
                 .setHorizontalAlignment(HorizontalAlignment.RIGHT)
                 .addCell(
                         cellNoBorder("Bogor" + ", " +
-                                hari().get(tgl.getDayOfWeek()) + ", " +
+                                //hari().get(tgl.getDayOfWeek()) + ", " +
                                 tgl.getDayOfMonth() + " " +
                                 bulan().get(tgl.getMonthOfYear()) + " " +
                                 tgl.getYear())
@@ -116,8 +117,44 @@ public class LaporanPDF {
                                 .setVerticalAlignment(VerticalAlignment.BOTTOM));
     }
 
+    public static void daftar_siswa() throws IOException {
+        LocalDate localDate = new LocalDate(new Date());
+        String fileName = String.format("laporan-semua-nasabah-%s.pdf", localDate.toString());
+
+        PdfWriter writer = new PdfWriter(fileName);
+        PdfDocument pdf = new PdfDocument(writer);
+        Document document = new Document(pdf);
+        document.add(kop_surat("Laporan Nasabah"));
+
+        Table detailTable = new Table(new UnitValue[]{
+                new UnitValue(UnitValue.PERCENT, 50),
+                new UnitValue(UnitValue.PERCENT, 50)}, true);
+
+        Table transaksiTable = new Table(6);
+        transaksiTable.setWidth(520);
+        transaksiTable.addHeaderCell(cell("No Rekening"));
+        transaksiTable.addHeaderCell(cell("NIS"));
+        transaksiTable.addHeaderCell(cell("Nama"));
+        transaksiTable.addHeaderCell(cell("Kelas"));
+        transaksiTable.addHeaderCell(cell("No Telp"));
+        transaksiTable.addHeaderCell(cell("Alamat"));
+
+        Nasabah.getNasabahList().forEach(nasabah -> {
+            transaksiTable.addCell(cell(String.valueOf(nasabah.getNo_rekening())));
+            transaksiTable.addCell(cell(nasabah.getNis()));
+            transaksiTable.addCell(cell(nasabah.getNama()));
+            transaksiTable.addCell(cell(nasabah.getNama()));
+            transaksiTable.addCell(cell(nasabah.getNo_telp()));
+            transaksiTable.addCell(cell(nasabah.getAlamat()));
+        });
+
+        document.add(transaksiTable.setMarginTop(10));
+        document.add(signature(localDate));
+        document.close();
+        showReport(fileName);
+    }
     
-    public static void nasabah(Nasabah nasabah, java.util.List<Transaksi> laporan_nasabah) throws IOException {
+    public static void nasabah(Nasabah nasabah, java.util.List<Transaksi> laporan_nasabah_trx) throws IOException {
         LocalDate localDate = new LocalDate(new Date());
         String fileName = String.format("laporan-nasabah-%s.pdf", localDate.toString());
 
@@ -136,7 +173,7 @@ public class LaporanPDF {
         detailTable.addCell(cellNoBorder(String.valueOf(nasabah.getNo_rekening())));
     
         detailTable.addCell(cellNoBorder("Jenis Transaksi:"));
-        detailTable.addCell(cellNoBorder(laporan_nasabah.get(0).getJenis_transaksi()));
+        detailTable.addCell(cellNoBorder(laporan_nasabah_trx.get(0).getJenis_transaksi()));
             
         document.add(detailTable);
 
@@ -148,7 +185,7 @@ public class LaporanPDF {
         
         //transaksiTable.addHeaderCell(cell("Jenis Transaksi"));
 
-        laporan_nasabah.forEach(transaksi -> {
+        laporan_nasabah_trx.forEach(transaksi -> {
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             transaksiTable.addCell(cell(dateFormat.format(transaksi.getTanggal_transaksi()).toString()));
             //transaksiTable.addCell(cell(new LocalDate(transaksi.getTanggal_transaksi()).toString()));
@@ -164,20 +201,14 @@ public class LaporanPDF {
     }
     
     
-    public static void nasabah_semuatrx(Nasabah nasabah, java.util.List<Transaksi> laporan_bank) throws IOException {
+    public static void nasabah_semuatrx(Nasabah nasabah, java.util.List<Transaksi> laporan_nasabah_semua_trx) throws IOException {
         LocalDate localDate = new LocalDate(new Date());
         String fileName = String.format("laporan-nasabah-%s.pdf", localDate.toString());
 
         PdfWriter writer = new PdfWriter(fileName);
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf);
-
-        document.add(
-                new Paragraph()
-                        .setTextAlignment(TextAlignment.RIGHT)
-                        .setMultipliedLeading(1)
-                        .add(new Text("Laporan Bank Mini SDIT AL-Hamidiyyah\n")/*.setFont(boldFont)*/)
-                        .add(localDate.toString()));
+        document.add(kop_surat(""));
 
         Table detailTable = new Table(new UnitValue[]{
                 new UnitValue(UnitValue.PERCENT, 50),
@@ -187,10 +218,6 @@ public class LaporanPDF {
         detailTable.addCell(cellNoBorder(nasabah.getNama()));
         detailTable.addCell(cellNoBorder("Nomor Rekening:"));
         detailTable.addCell(cellNoBorder(String.valueOf(nasabah.getNo_rekening())));
-    
-//        detailTable.addCell(cellNoBorder("Jenis Transaksi:"));
-//        detailTable.addCell(cellNoBorder(laporan_bank.get(0).getJenis_transaksi()));
-            
         document.add(detailTable);
 
         Table transaksiTable = new Table(4);
@@ -200,22 +227,57 @@ public class LaporanPDF {
         transaksiTable.addHeaderCell(cell("Jumlah Transaksi"));
         transaksiTable.addHeaderCell(cell("Keterangan"));
         
-        
-
-        laporan_bank.forEach(transaksi -> {
+        laporan_nasabah_semua_trx.forEach(transaksi -> {
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             transaksiTable.addCell(cell(dateFormat.format(transaksi.getTanggal_transaksi()).toString()));
             transaksiTable.addCell(cell(transaksi.getJenis_transaksi()));
             transaksiTable.addCell(cell(Rupiah.rupiah(transaksi.getJumlah_transaksi())));
             transaksiTable.addCell(cell(transaksi.getKeterangan()));
-            
         });
 
         document.add(transaksiTable.setMarginTop(10));
+        document.add(signature(localDate));
         document.close();
         showReport(fileName);
     }
     
+    //CETAK LAPORAN BANK SEMUA TRX
+    public static void bank_semuatrx(Nasabah nasabah, java.util.List<Transaksi> laporan_bank_semua_trx) throws IOException {
+        LocalDate localDate = new LocalDate(new Date());
+        String fileName = String.format("laporan-nasabah-%s.pdf", localDate.toString());
+
+        PdfWriter writer = new PdfWriter(fileName);
+        PdfDocument pdf = new PdfDocument(writer);
+        Document document = new Document(pdf);
+        document.add(kop_surat("Laporan Bank"));
+        Table detailTable = new Table(new UnitValue[]{
+                new UnitValue(UnitValue.PERCENT, 50),
+                new UnitValue(UnitValue.PERCENT, 50)}, true);
+        Table transaksiTable = new Table(4);
+        transaksiTable.setWidth(520);
+        transaksiTable.addHeaderCell(cell("No Rekening"));
+        transaksiTable.addHeaderCell(cell("Nama"));
+        transaksiTable.addHeaderCell(cell("Tanggal Transaksi"));
+        transaksiTable.addHeaderCell(cell("Jenis Transaksi"));
+        transaksiTable.addHeaderCell(cell("Jumlah Transaksi"));
+        transaksiTable.addHeaderCell(cell("Keterangan"));
+        laporan_bank_semua_trx.forEach(transaksi -> {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            transaksiTable.addCell(cell(String.valueOf(nasabah.getNo_rekening())));
+            transaksiTable.addCell(cell(nasabah.getNama()));
+            transaksiTable.addCell(cell(dateFormat.format(transaksi.getTanggal_transaksi()).toString()));
+            transaksiTable.addCell(cell(transaksi.getJenis_transaksi()));
+            transaksiTable.addCell(cell(Rupiah.rupiah(transaksi.getJumlah_transaksi())));
+            transaksiTable.addCell(cell(transaksi.getKeterangan()));
+        });
+
+        document.add(transaksiTable.setMarginTop(10));
+        document.add(signature(localDate));
+        document.close();
+        showReport(fileName);
+    }
+    
+    //STRUK
     public static void struk(Transaksi transaksi) throws IOException {
         LocalDate localDate = new LocalDate(new Date());  
         String fileName = "Receipt"+transaksi.getNo_transaksi()+".pdf";
@@ -265,7 +327,7 @@ public class LaporanPDF {
                 new Paragraph()
                         .setTextAlignment(TextAlignment.CENTER)
                         .setFontSize(5)
-                        .add("ASDSADSADASDSDASDSADSADADAS")
+                        .add("Terima Kasih")
        );
 
         document.close();

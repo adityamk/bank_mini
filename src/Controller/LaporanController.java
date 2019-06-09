@@ -67,8 +67,8 @@ public class LaporanController implements Initializable {
     }
 
     @FXML
-    void cetakActionSiswa(ActionEvent event) {
-
+    void cetakActionSiswa(ActionEvent event) throws IOException {
+       LaporanPDF.daftar_siswa();
     }
     
     @FXML
@@ -99,15 +99,19 @@ public class LaporanController implements Initializable {
     private JFXDatePicker daritanggalDateBank;
 
     @FXML
-    private JFXComboBox<?> jenisComboBoxBank;
+    private JFXComboBox<String> jenisComboBoxBank;
 
     @FXML
     private JFXTreeTableView<Nasabah> TableDaftarSiswa;
     
     @FXML
     void cetakActionBank(ActionEvent event) throws IOException {
-        Nasabah nasabah = Nasabah.nasabah();
-       // LaporanPDF.bank(nasabah, laporanListBank);
+        Nasabah nasabah = Nasabah.nasabah(transaksi);
+        if (jenisComboBoxBank.getSelectionModel().getSelectedItem().equals("Semua Transaksi")) {
+            LaporanPDF.bank_semuatrx(nasabah, laporanListBank);
+        } else {
+            //LaporanPDF.nasabah(nasabah, laporanList);
+        }
     }
 
     @FXML
@@ -139,11 +143,11 @@ public class LaporanController implements Initializable {
      @FXML
     void cetakAction(ActionEvent event) throws IOException {
         Nasabah nasabah = Nasabah.nasabah(Integer.parseInt(norekTextField.getText()));
-//        if (jenisComboBox.getSelectionModel().getSelectedItem().equals("Semua Transaksi")) {
-//            LaporanPDF.nasabah_semuatrx(nasabah, laporanList);
-//        } else {
+        if (jenisComboBox.getSelectionModel().getSelectedItem().equals("Semua Transaksi")) {
+            LaporanPDF.nasabah_semuatrx(nasabah, laporanList);
+        } else {
             LaporanPDF.nasabah(nasabah, laporanList);
-        //}
+        }
     }
     
     @FXML
@@ -162,8 +166,6 @@ public class LaporanController implements Initializable {
             }
         }
     }
-        
-
     
     private ObservableList<Transaksi> laporanList = FXCollections.observableArrayList();
     private ObservableList<Transaksi> laporanListBank = FXCollections.observableArrayList();
@@ -215,6 +217,8 @@ public class LaporanController implements Initializable {
         TableLaporan.setShowRoot(false);  
         
         //laporanBANK
+        jenisComboBoxBank.setItems(jenis_trx);
+        
         TreeTableColumn<Transaksi, Integer> notrxbank = new TreeTableColumn<>("No. Transaksi");
         TreeTableColumn<Transaksi, Integer> norekbank = new TreeTableColumn<>("No Rek");
         TreeTableColumn<Transaksi, String> namabank = new TreeTableColumn<>("Nama");
