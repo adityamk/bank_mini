@@ -10,7 +10,6 @@ import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
@@ -50,16 +49,16 @@ public class Transaksi extends RecursiveTreeObject<Transaksi> {
     }
    
     public ObjectProperty notrxProperty() {
-        return new SimpleObjectProperty<Integer>(no_transaksi);
+        return new SimpleObjectProperty<>(no_transaksi);
     }
      public ObjectProperty norekProperty() {
-        return new SimpleObjectProperty<Integer>(no_rekening);
+        return new SimpleObjectProperty<>(no_rekening);
     }
     public StringProperty jenisProperty() {
         return new SimpleStringProperty(jenis_transaksi);
     }   
      public ObjectProperty tanggalProperty() {
-        return new SimpleObjectProperty<Date>(tanggal_transaksi);
+        return new SimpleObjectProperty<>(tanggal_transaksi);
     }
     public StringProperty jumlahProperty() {
         return new SimpleStringProperty(Rupiah.rupiah(jumlah_transaksi));
@@ -125,6 +124,22 @@ public class Transaksi extends RecursiveTreeObject<Transaksi> {
                     LocalDate localDate = localDateTime.toLocalDate();
                     return localDate.isAfter(dari) && localDate.isBefore(sampai) || localDate.equals(sampai);
                 }).collect(Collectors.toList());
+    }
+    
+    public static List <Transaksi> transaksiBank (LocalDate dari, LocalDate sampai, String jenis){
+        return getTransaksi()
+                .stream()
+                .filter((t) -> {
+                    Transaksi transaksi = (Transaksi) t;
+                    Date date = transaksi.getTanggal_transaksi();
+                    Instant instant = Instant.ofEpochMilli(date.getTime());
+                    LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+                    LocalDate localDate = localDateTime.toLocalDate();
+                    return localDate.isAfter(dari) && localDate.isBefore(sampai) || localDate.equals(sampai);
+                }).collect(Collectors.toList())
+                .stream()
+                .filter(t -> t.getJenis_transaksi().equals(jenis))
+                .collect(Collectors.toList());
     }
     
     public static List <Transaksi> transaksi_keuangan (LocalDate dari, LocalDate sampai){

@@ -3,14 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bankmini.Controller;
+package Controller;
 
+import com.jfoenix.controls.JFXTextField;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
 
 /**
  *
@@ -19,17 +23,31 @@ import javafx.scene.control.Label;
 public class SettingDBController implements Initializable {
     
     @FXML
-    private Label label;
+    private JFXTextField urldbTextField;
     
     @FXML
-    private void handleButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
+    private JFXTextField usernamedbTextField;
+    
+    @FXML
+    private JFXTextField passowrddbTextField;
+    
+    @FXML
+    private void SimpanAction(ActionEvent event) throws IOException {
+        DB db = new DB(urldbTextField.getText(), usernamedbTextField.getText(), passowrddbTextField.getText());
+        db.simpan();
+        System.exit(0);
     }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        try {
+            DB db = DB.getDBConfig();
+            urldbTextField.setText(db.getUrl());
+            usernamedbTextField.setText(db.getUsername());
+            passowrddbTextField.setText(db.getPassword());
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(SettingDBController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }    
     
 }

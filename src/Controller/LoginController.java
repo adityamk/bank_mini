@@ -24,6 +24,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -92,6 +93,10 @@ public class LoginController implements Initializable {
                 
               } else {
                 System.out.println("Password Salah");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Login");
+                alert.setContentText("Password/Username Salah");
+                alert.show();
                 passwordTextField.requestFocus();
               }   
       }else {

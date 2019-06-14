@@ -9,8 +9,6 @@ import Model.LaporanPDF;
 import Model.Nasabah;
 import static Model.Nasabah.getNasabahList;
 import Model.Transaksi;
-import static Model.Transaksi.getTransaksiList;
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
@@ -26,9 +24,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
-import org.joda.time.LocalDate;
 
 /**
  *
@@ -36,34 +34,156 @@ import org.joda.time.LocalDate;
  */
 public class LaporanController implements Initializable {
     @FXML
-    void prosesActionKeuangan(ActionEvent event) {
-        List<Transaksi> transaksi = Transaksi.transaksi_keuangan(DariTanggalDateKeuangan.getValue() , SampaiTanggalDateKeuangan.getValue()); 
-        if (transaksi.size() > 0) {
-          Transaksi.getTransaksiListbyket().setAll(transaksi);
+    private JFXDatePicker DariTanggalDateKeuangan;
+    @FXML
+    private JFXDatePicker SampaiTanggalDateKeuangan;
+    @FXML
+    private JFXDatePicker DariTanggalDatePembayaran;
+    @FXML
+    private JFXDatePicker SampaiTanggalDatePembayaran;  
+    @FXML
+    private JFXTreeTableView<Transaksi> Tablekeuangan;
+    @FXML
+    private JFXTreeTableView<Transaksi> Tablepembayaran;    
+    @FXML
+    private JFXDatePicker sampaitanggalDateBank;
+    @FXML
+    private JFXTreeTableView<Transaksi> TableLaporanBank;
+    @FXML
+    private JFXDatePicker daritanggalDateBank;
+    @FXML
+    private JFXComboBox<String> jenisComboBoxBank;
+    @FXML
+    private JFXTreeTableView<Nasabah> TableDaftarSiswa;   
+    @FXML
+    private JFXTreeTableView<Transaksi> TableLaporan;    
+    @FXML
+    private JFXTextField norekTextField;       
+    @FXML
+    private JFXDatePicker sampaitanggalDate;
+    @FXML
+    private JFXDatePicker daritanggalDate;
+    @FXML
+    private JFXComboBox<String> jenisComboBox;
+    
+    private final ObservableList<Transaksi> laporanList = FXCollections.observableArrayList();
+    private final ObservableList<Transaksi> laporanListBank = FXCollections.observableArrayList();
+    
+    private boolean validasi_laporan_siswa() {
+    return !norekTextField.getText().equals("") &&
+            jenisComboBox.getValue() != null &&
+            daritanggalDate.getValue() != null && 
+            sampaitanggalDate.getValue() != null;
+    }
+    
+    private boolean validasi_laporan_trx_bank() {
+    return  jenisComboBoxBank.getValue() != null &&
+            daritanggalDateBank.getValue() != null && 
+            sampaitanggalDateBank.getValue() != null;
+    }
+    
+    private boolean validasi_laporan_keuangan() {
+    return  DariTanggalDateKeuangan.getValue() != null && 
+            SampaiTanggalDateKeuangan.getValue() != null;
+    }
+    
+    private boolean validasi_laporan_pembayaran() {
+    return  DariTanggalDatePembayaran.getValue() != null && 
+            SampaiTanggalDatePembayaran.getValue() != null;
+    }
+    
+    @FXML
+    void prosesAction(ActionEvent event) {
+        if (validasi_laporan_siswa()){ 
+            Nasabah nasabah = Nasabah.nasabah(Integer.parseInt(norekTextField.getText()));
+            if (nasabah != null){
+                List<Transaksi> transaksi = Transaksi.transaksi(
+                        nasabah, 
+                        jenisComboBox.getSelectionModel().getSelectedItem(), 
+                        daritanggalDate.getValue(), sampaitanggalDate.getValue()
+                );
+                if (transaksi.size() > 0) {
+                    laporanList.setAll(transaksi);
+                } else {
+                    laporanList.clear();
+                }
+            }
         } else {
-          Transaksi.getTransaksiListbyket().clear();
+             Alert alert = new Alert(Alert.AlertType.ERROR);
+             alert.setTitle("Laporan");
+             alert.setContentText("Masukkan Data Laporan");
+             alert.show();
         }
-        
+    }
+    
+    @FXML
+    void prosesActionBank(ActionEvent event) {
+        if (validasi_laporan_trx_bank()) {
+            List<Transaksi> transaksi;
+            if (jenisComboBoxBank.getSelectionModel().getSelectedItem().equals("Semua Transaksi")) {
+                transaksi = Transaksi.transaksiBank(daritanggalDateBank.getValue(), sampaitanggalDateBank.getValue());
+            } else {
+                transaksi = Transaksi.transaksiBank(
+                        daritanggalDateBank.getValue(), 
+                        sampaitanggalDateBank.getValue(), 
+                        jenisComboBoxBank.getSelectionModel().getSelectedItem());
+            }
+
+            if (transaksi.size() > 0) {
+                laporanListBank.setAll(transaksi);
+            } else {
+                laporanListBank.clear();
+            }
+        } else {
+             Alert alert = new Alert(Alert.AlertType.ERROR);
+             alert.setTitle("Laporan");
+             alert.setContentText("Masukkan Data Laporan");
+             alert.show();
+        }
+    }
+    
+    @FXML
+    void prosesActionKeuangan(ActionEvent event) {
+        if (validasi_laporan_keuangan()) {
+            List<Transaksi> transaksi = Transaksi.transaksi_keuangan(DariTanggalDateKeuangan.getValue() , SampaiTanggalDateKeuangan.getValue()); 
+            if (transaksi.size() > 0) {
+              Transaksi.getTransaksiListbyket().setAll(transaksi);
+            } else {
+              Transaksi.getTransaksiListbyket().clear();
+            }
+        } else {
+             Alert alert = new Alert(Alert.AlertType.ERROR);
+             alert.setTitle("Laporan");
+             alert.setContentText("Masukkan Data Laporan");
+             alert.show();
+        }
     }
 
     @FXML
     void prosesActionPembayaran(ActionEvent event) {
-        List<Transaksi> transaksi = Transaksi.transaksi_pembayaran(DariTanggalDatePembayaran.getValue() , SampaiTanggalDatePembayaran.getValue()); 
-        if (transaksi.size() > 0) {
-          Transaksi.getTransaksiListbyket_pem().setAll(transaksi);
+        if (validasi_laporan_pembayaran()) {
+            List<Transaksi> transaksi = Transaksi.transaksi_pembayaran(DariTanggalDatePembayaran.getValue() , SampaiTanggalDatePembayaran.getValue()); 
+            if (transaksi.size() > 0) {
+              Transaksi.getTransaksiListbyket_pem().setAll(transaksi);
+            } else {
+              Transaksi.getTransaksiListbyket_pem().clear();
+            }
         } else {
-          Transaksi.getTransaksiListbyket_pem().clear();
+             Alert alert = new Alert(Alert.AlertType.ERROR);
+             alert.setTitle("Laporan");
+             alert.setContentText("Masukkan Data Laporan");
+             alert.show();  
         }
     }
     
-      @FXML
-    void cetakActionKeuangan(ActionEvent event) {
-
+    @FXML
+    void cetakActionKeuangan(ActionEvent event) throws IOException {
+        LaporanPDF.bank_semuatrx(Transaksi.getTransaksiListbyket());
     }
 
     @FXML
-    void cetakActionPembayaran(ActionEvent event) {
-
+    void cetakActionPembayaran(ActionEvent event) throws IOException {
+        LaporanPDF.bank_semuatrx(Transaksi.getTransaksiListbyket_pem());
     }
 
     @FXML
@@ -71,74 +191,11 @@ public class LaporanController implements Initializable {
        LaporanPDF.daftar_siswa();
     }
     
-    @FXML
-    private JFXDatePicker DariTanggalDateKeuangan;
-
-    @FXML
-    private JFXDatePicker SampaiTanggalDateKeuangan;
-    
-    @FXML
-    private JFXDatePicker DariTanggalDatePembayaran;
-
-    @FXML
-    private JFXDatePicker SampaiTanggalDatePembayaran;
-    
-    @FXML
-    private JFXTreeTableView<Transaksi> Tablekeuangan;
-
-    @FXML
-    private JFXTreeTableView<Transaksi> Tablepembayaran;
-     
-    @FXML
-    private JFXDatePicker sampaitanggalDateBank;
-
-    @FXML
-    private JFXTreeTableView<Transaksi> TableLaporanBank;
-
-    @FXML
-    private JFXDatePicker daritanggalDateBank;
-
-    @FXML
-    private JFXComboBox<String> jenisComboBoxBank;
-
-    @FXML
-    private JFXTreeTableView<Nasabah> TableDaftarSiswa;
     
     @FXML
     void cetakActionBank(ActionEvent event) throws IOException {
-        Nasabah nasabah = Nasabah.nasabah(transaksi);
-        if (jenisComboBoxBank.getSelectionModel().getSelectedItem().equals("Semua Transaksi")) {
-            LaporanPDF.bank_semuatrx(nasabah, laporanListBank);
-        } else {
-            //LaporanPDF.nasabah(nasabah, laporanList);
-        }
+        LaporanPDF.bank_semuatrx(laporanListBank);
     }
-
-    @FXML
-    void prosesActionBank(ActionEvent event) {
-        List<Transaksi> transaksi = Transaksi.transaksiBank(daritanggalDateBank.getValue(), sampaitanggalDateBank.getValue());
-        System.out.println(transaksi);
-        if (transaksi.size() > 0) {
-            laporanListBank.setAll(transaksi);
-        } else {
-            laporanListBank.clear();
-        }
-    }
-    
-    @FXML
-    private JFXTreeTableView<Transaksi> TableLaporan;
-     
-    @FXML
-    private JFXTextField norekTextField;
-       
-    @FXML
-    private JFXDatePicker sampaitanggalDate;
-
-    @FXML
-    private JFXDatePicker daritanggalDate;
-
-    @FXML
-    private JFXComboBox<String> jenisComboBox;
     
      @FXML
     void cetakAction(ActionEvent event) throws IOException {
@@ -149,26 +206,6 @@ public class LaporanController implements Initializable {
             LaporanPDF.nasabah(nasabah, laporanList);
         }
     }
-    
-    @FXML
-    void prosesAction(ActionEvent event) {
-        Nasabah nasabah = Nasabah.nasabah(Integer.parseInt(norekTextField.getText()));
-        if (nasabah != null){
-            List<Transaksi> transaksi = Transaksi.transaksi(
-                    nasabah, 
-                    jenisComboBox.getSelectionModel().getSelectedItem(), 
-                    daritanggalDate.getValue(), sampaitanggalDate.getValue()
-            );
-            if (transaksi.size() > 0) {
-                laporanList.setAll(transaksi);
-            } else {
-                laporanList.clear();
-            }
-        }
-    }
-    
-    private ObservableList<Transaksi> laporanList = FXCollections.observableArrayList();
-    private ObservableList<Transaksi> laporanListBank = FXCollections.observableArrayList();
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -201,7 +238,7 @@ public class LaporanController implements Initializable {
         TableLaporan.getColumns().add(tgl);
         TableLaporan.getColumns().add(jumlah);
         TableLaporan.getColumns().add(ket);
-        TableLaporan.setColumnResizePolicy(TableLaporan.CONSTRAINED_RESIZE_POLICY);
+        TableLaporan.setColumnResizePolicy(JFXTreeTableView.CONSTRAINED_RESIZE_POLICY);
 //        norek.prefWidthProperty().bind(TableNasabah.prefWidthProperty().multiply(0.1));
 //        nis.prefWidthProperty().bind(TableNasabah.prefWidthProperty().multiply(0.1));
 //        nama.prefWidthProperty().bind(TableNasabah.prefWidthProperty().multiply(0.2));
@@ -244,7 +281,7 @@ public class LaporanController implements Initializable {
         TableLaporanBank.getColumns().add(tglbank);
         TableLaporanBank.getColumns().add(jumlahbank);
         TableLaporanBank.getColumns().add(ketbank);
-        TableLaporanBank.setColumnResizePolicy(TableLaporan.CONSTRAINED_RESIZE_POLICY);
+        TableLaporanBank.setColumnResizePolicy(JFXTreeTableView.CONSTRAINED_RESIZE_POLICY);
         
         TreeItem<Transaksi> trxRoot2 = new RecursiveTreeItem<>(laporanListBank, RecursiveTreeObject::getChildren);
         TableLaporanBank.setRoot(trxRoot2);
@@ -318,7 +355,7 @@ public class LaporanController implements Initializable {
         Tablekeuangan.getColumns().add(tgl2);
         Tablekeuangan.getColumns().add(jumlah2);
         Tablekeuangan.getColumns().add(ket2);
-        Tablekeuangan.setColumnResizePolicy(Tablekeuangan.CONSTRAINED_RESIZE_POLICY);
+        Tablekeuangan.setColumnResizePolicy(JFXTreeTableView.CONSTRAINED_RESIZE_POLICY);
 //        norek.prefWidthProperty().bind(TableNasabah.prefWidthProperty().multiply(0.1));
 //        nis.prefWidthProperty().bind(TableNasabah.prefWidthProperty().multiply(0.1));
 //        nama.prefWidthProperty().bind(TableNasabah.prefWidthProperty().multiply(0.2));
@@ -360,7 +397,7 @@ public class LaporanController implements Initializable {
         Tablepembayaran.getColumns().add(tgl3);
         Tablepembayaran.getColumns().add(jumlah3);
         Tablepembayaran.getColumns().add(ket3);
-        Tablepembayaran.setColumnResizePolicy(Tablepembayaran.CONSTRAINED_RESIZE_POLICY);
+        Tablepembayaran.setColumnResizePolicy(JFXTreeTableView.CONSTRAINED_RESIZE_POLICY);
 //        norek.prefWidthProperty().bind(TableNasabah.prefWidthProperty().multiply(0.1));
 //        nis.prefWidthProperty().bind(TableNasabah.prefWidthProperty().multiply(0.1));
 //        nama.prefWidthProperty().bind(TableNasabah.prefWidthProperty().multiply(0.2));
@@ -376,5 +413,3 @@ public class LaporanController implements Initializable {
         Tablepembayaran.setShowRoot(false); 
     }
 }
-
-

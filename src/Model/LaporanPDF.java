@@ -20,14 +20,14 @@ import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
-import javafx.collections.FXCollections;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
-import org.joda.time.YearMonth;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.VerticalAlignment;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -36,7 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import javax.imageio.ImageIO;
 
 public class LaporanPDF {
 
@@ -80,8 +80,16 @@ public class LaporanPDF {
         );
     }
     
-    private static Table kop_surat(String judul) throws MalformedURLException {
-        Image image = new Image(ImageDataFactory.create("src/Asset/logo.PNG"));
+     private static Table kop_surat(String judul) throws MalformedURLException, IOException {
+        BufferedImage img = ImageIO.read(
+                Laporan.class.getResourceAsStream("/Asset/logo.PNG"));
+        byte[] imageInByte;
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            ImageIO.write(img, "png", baos);
+            baos.flush();
+            imageInByte = baos.toByteArray();
+        }
+        Image image = new Image(ImageDataFactory.create(imageInByte));
 
         return new Table(new UnitValue[]{
                 new UnitValue(UnitValue.PERCENT, 10),
@@ -123,34 +131,36 @@ public class LaporanPDF {
 
         PdfWriter writer = new PdfWriter(fileName);
         PdfDocument pdf = new PdfDocument(writer);
-        Document document = new Document(pdf);
-        document.add(kop_surat("Laporan Nasabah"));
-
-        Table detailTable = new Table(new UnitValue[]{
-                new UnitValue(UnitValue.PERCENT, 50),
-                new UnitValue(UnitValue.PERCENT, 50)}, true);
-
-        Table transaksiTable = new Table(6);
-        transaksiTable.setWidth(520);
-        transaksiTable.addHeaderCell(cell("No Rekening"));
-        transaksiTable.addHeaderCell(cell("NIS"));
-        transaksiTable.addHeaderCell(cell("Nama"));
-        transaksiTable.addHeaderCell(cell("Kelas"));
-        transaksiTable.addHeaderCell(cell("No Telp"));
-        transaksiTable.addHeaderCell(cell("Alamat"));
-
-        Nasabah.getNasabahList().forEach(nasabah -> {
-            transaksiTable.addCell(cell(String.valueOf(nasabah.getNo_rekening())));
-            transaksiTable.addCell(cell(nasabah.getNis()));
-            transaksiTable.addCell(cell(nasabah.getNama()));
-            transaksiTable.addCell(cell(nasabah.getNama()));
-            transaksiTable.addCell(cell(nasabah.getNo_telp()));
-            transaksiTable.addCell(cell(nasabah.getAlamat()));
-        });
-
-        document.add(transaksiTable.setMarginTop(10));
-        document.add(signature(localDate));
-        document.close();
+        try (Document document = new Document(pdf)) {
+            document.add(kop_surat("Laporan Nasabah"));
+            
+            Table transaksiTable = new Table(new UnitValue[]{
+                new UnitValue(UnitValue.PERCENT, 16),
+                new UnitValue(UnitValue.PERCENT, 16),
+                new UnitValue(UnitValue.PERCENT, 16),
+                new UnitValue(UnitValue.PERCENT, 16),
+                new UnitValue(UnitValue.PERCENT, 16),
+                new UnitValue(UnitValue.PERCENT, 16)}, false);
+            transaksiTable.setWidth(520);
+            transaksiTable.addHeaderCell(cell("No Rekening"));
+            transaksiTable.addHeaderCell(cell("NIS"));
+            transaksiTable.addHeaderCell(cell("Nama"));
+            transaksiTable.addHeaderCell(cell("Kelas"));
+            transaksiTable.addHeaderCell(cell("No Telp"));
+            transaksiTable.addHeaderCell(cell("Alamat"));
+            
+            Nasabah.getNasabahList().forEach(nasabah -> {
+                transaksiTable.addCell(cell(String.valueOf(nasabah.getNo_rekening())));
+                transaksiTable.addCell(cell(nasabah.getNis()));
+                transaksiTable.addCell(cell(nasabah.getNama()));
+                transaksiTable.addCell(cell(nasabah.getKelas()));
+                transaksiTable.addCell(cell(nasabah.getNo_telp()));
+                transaksiTable.addCell(cell(nasabah.getAlamat()));
+            });
+            
+            document.add(transaksiTable.setMarginTop(10));
+            document.add(signature(localDate));
+        }
         showReport(fileName);
     }
     
@@ -160,43 +170,43 @@ public class LaporanPDF {
 
         PdfWriter writer = new PdfWriter(fileName);
         PdfDocument pdf = new PdfDocument(writer);
-        Document document = new Document(pdf);
-        document.add(kop_surat("Laporan Nasabah"));
-
-        Table detailTable = new Table(new UnitValue[]{
+        try (Document document = new Document(pdf)) {
+            document.add(kop_surat("Laporan Nasabah"));
+            
+            Table detailTable = new Table(new UnitValue[]{
                 new UnitValue(UnitValue.PERCENT, 50),
                 new UnitValue(UnitValue.PERCENT, 50)}, true);
-
-        detailTable.addCell(cellNoBorder("Nama Nasabah:"));
-        detailTable.addCell(cellNoBorder(nasabah.getNama()));
-        detailTable.addCell(cellNoBorder("Nomor Rekening:"));
-        detailTable.addCell(cellNoBorder(String.valueOf(nasabah.getNo_rekening())));
-    
-        detailTable.addCell(cellNoBorder("Jenis Transaksi:"));
-        detailTable.addCell(cellNoBorder(laporan_nasabah_trx.get(0).getJenis_transaksi()));
             
-        document.add(detailTable);
-
-        Table transaksiTable = new Table(3);
-        transaksiTable.setWidth(520);
-        transaksiTable.addHeaderCell(cell("Tanggal Transaksi"));
-        transaksiTable.addHeaderCell(cell("Jumlah Transaksi"));
-        transaksiTable.addHeaderCell(cell("Keterangan"));
-        
-        //transaksiTable.addHeaderCell(cell("Jenis Transaksi"));
-
-        laporan_nasabah_trx.forEach(transaksi -> {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            transaksiTable.addCell(cell(dateFormat.format(transaksi.getTanggal_transaksi()).toString()));
-            //transaksiTable.addCell(cell(new LocalDate(transaksi.getTanggal_transaksi()).toString()));
-            transaksiTable.addCell(cell(Rupiah.rupiah(transaksi.getJumlah_transaksi())));
-            transaksiTable.addCell(cell(transaksi.getKeterangan()));
+            detailTable.addCell(cellNoBorder("Nama Nasabah:"));
+            detailTable.addCell(cellNoBorder(nasabah.getNama()));
+            detailTable.addCell(cellNoBorder("Nomor Rekening:"));
+            detailTable.addCell(cellNoBorder(String.valueOf(nasabah.getNo_rekening())));
             
-        });
-
-        document.add(transaksiTable.setMarginTop(10));
-        document.add(signature(localDate));
-        document.close();
+            detailTable.addCell(cellNoBorder("Jenis Transaksi:"));
+            detailTable.addCell(cellNoBorder(laporan_nasabah_trx.get(0).getJenis_transaksi()));
+            
+            document.add(detailTable);
+            
+            Table transaksiTable = new Table(3);
+            transaksiTable.setWidth(520);
+            transaksiTable.addHeaderCell(cell("Tanggal Transaksi"));
+            transaksiTable.addHeaderCell(cell("Jumlah Transaksi"));
+            transaksiTable.addHeaderCell(cell("Keterangan"));
+            
+            //transaksiTable.addHeaderCell(cell("Jenis Transaksi"));
+            
+            laporan_nasabah_trx.forEach(transaksi -> {
+                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                transaksiTable.addCell(cell(dateFormat.format(transaksi.getTanggal_transaksi())));
+                //transaksiTable.addCell(cell(new LocalDate(transaksi.getTanggal_transaksi()).toString()));
+                transaksiTable.addCell(cell(Rupiah.rupiah(transaksi.getJumlah_transaksi())));
+                transaksiTable.addCell(cell(transaksi.getKeterangan()));
+                
+            });
+            
+            document.add(transaksiTable.setMarginTop(10));
+            document.add(signature(localDate));
+        }
         showReport(fileName);
     }
     
@@ -207,73 +217,73 @@ public class LaporanPDF {
 
         PdfWriter writer = new PdfWriter(fileName);
         PdfDocument pdf = new PdfDocument(writer);
-        Document document = new Document(pdf);
-        document.add(kop_surat(""));
-
-        Table detailTable = new Table(new UnitValue[]{
+        try (Document document = new Document(pdf)) {
+            document.add(kop_surat(""));
+            
+            Table detailTable = new Table(new UnitValue[]{
                 new UnitValue(UnitValue.PERCENT, 50),
                 new UnitValue(UnitValue.PERCENT, 50)}, true);
-
-        detailTable.addCell(cellNoBorder("Nama Nasabah:"));
-        detailTable.addCell(cellNoBorder(nasabah.getNama()));
-        detailTable.addCell(cellNoBorder("Nomor Rekening:"));
-        detailTable.addCell(cellNoBorder(String.valueOf(nasabah.getNo_rekening())));
-        document.add(detailTable);
-
-        Table transaksiTable = new Table(4);
-        transaksiTable.setWidth(520);
-        transaksiTable.addHeaderCell(cell("Tanggal Transaksi"));
-        transaksiTable.addHeaderCell(cell("Jenis Transaksi"));
-        transaksiTable.addHeaderCell(cell("Jumlah Transaksi"));
-        transaksiTable.addHeaderCell(cell("Keterangan"));
-        
-        laporan_nasabah_semua_trx.forEach(transaksi -> {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            transaksiTable.addCell(cell(dateFormat.format(transaksi.getTanggal_transaksi()).toString()));
-            transaksiTable.addCell(cell(transaksi.getJenis_transaksi()));
-            transaksiTable.addCell(cell(Rupiah.rupiah(transaksi.getJumlah_transaksi())));
-            transaksiTable.addCell(cell(transaksi.getKeterangan()));
-        });
-
-        document.add(transaksiTable.setMarginTop(10));
-        document.add(signature(localDate));
-        document.close();
+            
+            detailTable.addCell(cellNoBorder("Nama Nasabah:"));
+            detailTable.addCell(cellNoBorder(nasabah.getNama()));
+            detailTable.addCell(cellNoBorder("Nomor Rekening:"));
+            detailTable.addCell(cellNoBorder(String.valueOf(nasabah.getNo_rekening())));
+            document.add(detailTable);
+            
+            Table transaksiTable = new Table(4);
+            transaksiTable.setWidth(520);
+            transaksiTable.addHeaderCell(cell("Tanggal Transaksi"));
+            transaksiTable.addHeaderCell(cell("Jenis Transaksi"));
+            transaksiTable.addHeaderCell(cell("Jumlah Transaksi"));
+            transaksiTable.addHeaderCell(cell("Keterangan"));
+            
+            laporan_nasabah_semua_trx.forEach(transaksi -> {
+                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                transaksiTable.addCell(cell(dateFormat.format(transaksi.getTanggal_transaksi())));
+                transaksiTable.addCell(cell(transaksi.getJenis_transaksi()));
+                transaksiTable.addCell(cell(Rupiah.rupiah(transaksi.getJumlah_transaksi())));
+                transaksiTable.addCell(cell(transaksi.getKeterangan()));
+            });
+            
+            document.add(transaksiTable.setMarginTop(10));
+            document.add(signature(localDate));
+        }
         showReport(fileName);
     }
     
     //CETAK LAPORAN BANK SEMUA TRX
-    public static void bank_semuatrx(Nasabah nasabah, java.util.List<Transaksi> laporan_bank_semua_trx) throws IOException {
+    public static void bank_semuatrx(java.util.List<Transaksi> laporan_bank_semua_trx) throws IOException {
         LocalDate localDate = new LocalDate(new Date());
         String fileName = String.format("laporan-nasabah-%s.pdf", localDate.toString());
 
         PdfWriter writer = new PdfWriter(fileName);
         PdfDocument pdf = new PdfDocument(writer);
-        Document document = new Document(pdf);
-        document.add(kop_surat("Laporan Bank"));
-        Table detailTable = new Table(new UnitValue[]{
+        try (Document document = new Document(pdf)) {
+            document.add(kop_surat("Laporan Bank"));
+            Table detailTable = new Table(new UnitValue[]{
                 new UnitValue(UnitValue.PERCENT, 50),
                 new UnitValue(UnitValue.PERCENT, 50)}, true);
-        Table transaksiTable = new Table(4);
-        transaksiTable.setWidth(520);
-        transaksiTable.addHeaderCell(cell("No Rekening"));
-        transaksiTable.addHeaderCell(cell("Nama"));
-        transaksiTable.addHeaderCell(cell("Tanggal Transaksi"));
-        transaksiTable.addHeaderCell(cell("Jenis Transaksi"));
-        transaksiTable.addHeaderCell(cell("Jumlah Transaksi"));
-        transaksiTable.addHeaderCell(cell("Keterangan"));
-        laporan_bank_semua_trx.forEach(transaksi -> {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            transaksiTable.addCell(cell(String.valueOf(nasabah.getNo_rekening())));
-            transaksiTable.addCell(cell(nasabah.getNama()));
-            transaksiTable.addCell(cell(dateFormat.format(transaksi.getTanggal_transaksi()).toString()));
-            transaksiTable.addCell(cell(transaksi.getJenis_transaksi()));
-            transaksiTable.addCell(cell(Rupiah.rupiah(transaksi.getJumlah_transaksi())));
-            transaksiTable.addCell(cell(transaksi.getKeterangan()));
-        });
-
-        document.add(transaksiTable.setMarginTop(10));
-        document.add(signature(localDate));
-        document.close();
+            Table transaksiTable = new Table(6);
+            transaksiTable.setWidth(520);
+            transaksiTable.addHeaderCell(cell("No Rekening"));
+            transaksiTable.addHeaderCell(cell("Nama"));
+            transaksiTable.addHeaderCell(cell("Tanggal Transaksi"));
+            transaksiTable.addHeaderCell(cell("Jenis Transaksi"));
+            transaksiTable.addHeaderCell(cell("Jumlah Transaksi"));
+            transaksiTable.addHeaderCell(cell("Keterangan"));
+            laporan_bank_semua_trx.forEach(transaksi -> {
+                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                transaksiTable.addCell(cell(String.valueOf(Nasabah.nasabah(transaksi).getNo_rekening())));
+                transaksiTable.addCell(cell(Nasabah.nasabah(transaksi).getNama()));
+                transaksiTable.addCell(cell(dateFormat.format(transaksi.getTanggal_transaksi())));
+                transaksiTable.addCell(cell(transaksi.getJenis_transaksi()));
+                transaksiTable.addCell(cell(Rupiah.rupiah(transaksi.getJumlah_transaksi())));
+                transaksiTable.addCell(cell(transaksi.getKeterangan()));
+            });
+            
+            document.add(transaksiTable.setMarginTop(10));
+            document.add(signature(localDate));
+        }
         showReport(fileName);
     }
     
@@ -284,53 +294,51 @@ public class LaporanPDF {
           PdfFont boldFont = PdfFontFactory.createFont(bold, true);
           PdfWriter writer = new PdfWriter(fileName);
           PdfDocument pdf = new PdfDocument(writer);
-          Document document = new Document(pdf, new PageSize(new Rectangle(226.8f, 600f)));
-
-          document.add(
-                new Paragraph()
-                        .setTextAlignment(TextAlignment.CENTER)
-                        .setFontSize(5)
-                        .add(new Text("BANK MINI AL-HAMIDIYYAH").setFont(boldFont))
-                        .add("\n Perum Bambu Kuning Blok F7 Rt05/13 Bojonggede Timur Kec.Bojonggede")
-                        .add("\n-----------------------------------------------------------------------------------------\n")
-                        .add("")
-                        //.add(items.get(0).getNo_meja())
-                        .add("\tTanggal:")
-                        .add(localDate+" "+new LocalTime().toString().substring(0, 8))
-                        .add("\n-----------------------------------------------------------------------------------------\n")
-                        .add(new Text(transaksi.getJenis_transaksi()).setFont(boldFont))
-                        
-        );
-
-        Table itemsTable = new Table(new UnitValue[]{
+        try (Document document = new Document(pdf, new PageSize(new Rectangle(226.8f, 600f)))) {
+            document.add(
+                    new Paragraph()
+                            .setTextAlignment(TextAlignment.CENTER)
+                            .setFontSize(5)
+                            .add(new Text("BANK MINI AL-HAMIDIYYAH").setFont(boldFont))
+                            .add("\n Perum Bambu Kuning Blok F7 Rt05/13 Bojonggede Timur Kec.Bojonggede")
+                            .add("\n-----------------------------------------------------------------------------------------\n")
+                            .add("")
+                            //.add(items.get(0).getNo_meja())
+                            .add("\tTanggal:")
+                            .add(localDate+" "+new LocalTime().toString().substring(0, 8))
+                            .add("\n-----------------------------------------------------------------------------------------\n")
+                            .add(new Text(transaksi.getJenis_transaksi()).setFont(boldFont))
+                    
+            );
+            
+            Table itemsTable = new Table(new UnitValue[]{
                 new UnitValue(UnitValue.PERCENT, 25),
                 new UnitValue(UnitValue.PERCENT, 10),
                 new UnitValue(UnitValue.PERCENT, 30),}, true);
-
-        itemsTable.setFontSize(6);
-        itemsTable.setTextAlignment(TextAlignment.LEFT);
-        itemsTable.addCell(cell("No Rekening").setFontSize(6));
-        itemsTable.addCell(cell(":").setFontSize(6));
-        itemsTable.addCell(cell(String.valueOf(transaksi.getNo_rekening())).setFontSize(6));
-        itemsTable.addCell(cell("Jumlah").setFontSize(6));
-        itemsTable.addCell(cell(":").setFontSize(6));
-        itemsTable.addCell(cell(Rupiah.rupiah(transaksi.getJumlah_transaksi())).setFontSize(6));
-        itemsTable.addCell(cell("Saldo").setFontSize(6));
-        itemsTable.addCell(cell(":").setFontSize(6));
-        itemsTable.addCell(cell(Rupiah.rupiah(Nasabah.nasabah(transaksi).saldo())).setFontSize(6));
-        itemsTable.addCell(cell("Keterangan").setFontSize(6));
-        itemsTable.addCell(cell(":").setFontSize(6));
-        itemsTable.addCell(cell(transaksi.getKeterangan()).setFontSize(6));
-        document.add(itemsTable);
-
-        document.add(
-                new Paragraph()
-                        .setTextAlignment(TextAlignment.CENTER)
-                        .setFontSize(5)
-                        .add("Terima Kasih")
-       );
-
-        document.close();
+            
+            itemsTable.setFontSize(6);
+            itemsTable.setTextAlignment(TextAlignment.LEFT);
+            itemsTable.addCell(cell("No Rekening").setFontSize(6));
+            itemsTable.addCell(cell(":").setFontSize(6));
+            itemsTable.addCell(cell(String.valueOf(transaksi.getNo_rekening())).setFontSize(6));
+            itemsTable.addCell(cell("Jumlah").setFontSize(6));
+            itemsTable.addCell(cell(":").setFontSize(6));
+            itemsTable.addCell(cell(Rupiah.rupiah(transaksi.getJumlah_transaksi())).setFontSize(6));
+            itemsTable.addCell(cell("Saldo").setFontSize(6));
+            itemsTable.addCell(cell(":").setFontSize(6));
+            itemsTable.addCell(cell(Rupiah.rupiah(Nasabah.nasabah(transaksi).saldo())).setFontSize(6));
+            itemsTable.addCell(cell("Keterangan").setFontSize(6));
+            itemsTable.addCell(cell(":").setFontSize(6));
+            itemsTable.addCell(cell(transaksi.getKeterangan()).setFontSize(6));
+            document.add(itemsTable);
+            
+            document.add(
+                    new Paragraph()
+                            .setTextAlignment(TextAlignment.CENTER)
+                            .setFontSize(5)
+                            .add("Terima Kasih")
+            );
+        }
         showReport(fileName);
     }
         
@@ -350,7 +358,6 @@ public class LaporanPDF {
         try {
             desktop.open(file);
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }
