@@ -314,29 +314,29 @@ public class LaporanPDF {
             Table itemsTable = new Table(new UnitValue[]{
                 new UnitValue(UnitValue.PERCENT, 25),
                 new UnitValue(UnitValue.PERCENT, 10),
-                new UnitValue(UnitValue.PERCENT, 30),}, true);
+                new UnitValue(UnitValue.PERCENT, 30),}, false);
             
             itemsTable.setFontSize(6);
             itemsTable.setTextAlignment(TextAlignment.LEFT);
-            itemsTable.addCell(cell("No Rekening").setFontSize(6));
-            itemsTable.addCell(cell(":").setFontSize(6));
-            itemsTable.addCell(cell(String.valueOf(transaksi.getNo_rekening())).setFontSize(6));
-            itemsTable.addCell(cell("Jumlah").setFontSize(6));
-            itemsTable.addCell(cell(":").setFontSize(6));
-            itemsTable.addCell(cell(Rupiah.rupiah(transaksi.getJumlah_transaksi())).setFontSize(6));
-            itemsTable.addCell(cell("Saldo").setFontSize(6));
-            itemsTable.addCell(cell(":").setFontSize(6));
-            itemsTable.addCell(cell(Rupiah.rupiah(Nasabah.nasabah(transaksi).saldo())).setFontSize(6));
-            itemsTable.addCell(cell("Keterangan").setFontSize(6));
-            itemsTable.addCell(cell(":").setFontSize(6));
-            itemsTable.addCell(cell(transaksi.getKeterangan()).setFontSize(6));
+            itemsTable.addCell(cellNoBorder("No Rekening").setFontSize(6));
+            itemsTable.addCell(cellNoBorder(":").setFontSize(6));
+            itemsTable.addCell(cellNoBorder(String.valueOf(transaksi.getNo_rekening())).setFontSize(6));
+            itemsTable.addCell(cellNoBorder("Jumlah").setFontSize(6));
+            itemsTable.addCell(cellNoBorder(":").setFontSize(6));
+            itemsTable.addCell(cellNoBorder(Rupiah.rupiah(transaksi.getJumlah_transaksi())).setFontSize(6));
+            itemsTable.addCell(cellNoBorder("Saldo").setFontSize(6));
+            itemsTable.addCell(cellNoBorder(":").setFontSize(6));
+            itemsTable.addCell(cellNoBorder(Rupiah.rupiah(Nasabah.nasabah(transaksi).saldo())).setFontSize(6));
+            itemsTable.addCell(cellNoBorder("Keterangan").setFontSize(6));
+            itemsTable.addCell(cellNoBorder(":").setFontSize(6));
+            itemsTable.addCell(cellNoBorder(transaksi.getKeterangan()).setFontSize(6));
             document.add(itemsTable);
             
             document.add(
                     new Paragraph()
                             .setTextAlignment(TextAlignment.CENTER)
                             .setFontSize(5)
-                            .add("Terima Kasih")
+                            .add("Terima Kasih Telah Melakukan Transaksi")
             );
         }
         showReport(fileName);
