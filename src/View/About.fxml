@@ -12,6 +12,21 @@
             <Font name="Lobster" size="48.0" />
          </font>
       </Label>
+      <Label layoutX="224.0" layoutY="84.0" prefHeight="94.0" prefWidth="402.0" text="Aplikasi Bank Mini SDIT Al - Hamidiyyah ">
+         <font>
+            <Font name="Comic Sans MS" size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="89.0" layoutY="148.0" text="Perum. Bambu Kuning Blok F7 Rt. 15/13 Bojonggede Timur kec. Bojonggede">
+         <font>
+            <Font name="Comic Sans MS" size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="89.0" layoutY="551.0" text="2019">
+         <font>
+            <Font name="Comic Sans MS" size="20.0" />
+         </font>
+      </Label>
    </children>
    <effect>
       <DropShadow />

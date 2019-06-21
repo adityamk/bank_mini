@@ -178,12 +178,12 @@ public class LaporanController implements Initializable {
     
     @FXML
     void cetakActionKeuangan(ActionEvent event) throws IOException {
-        LaporanPDF.bank_semuatrx(Transaksi.getTransaksiListbyket());
+        LaporanPDF.laporan_keuangan(Transaksi.getTransaksiListbyket());
     }
 
     @FXML
     void cetakActionPembayaran(ActionEvent event) throws IOException {
-        LaporanPDF.bank_semuatrx(Transaksi.getTransaksiListbyket_pem());
+        LaporanPDF.laporan_pembayaran(Transaksi.getTransaksiListbyket_pem());
     }
 
     @FXML
